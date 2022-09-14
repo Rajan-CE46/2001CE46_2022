@@ -1,10 +1,12 @@
 def octant_identification(mod=5000):
     import pandas as pd
     DataFrame = pd.read_csv('octant_input.csv')
+
 #printing intial values
     DataFrame['U_initial'] = DataFrame['U']
     DataFrame['V_initial'] = DataFrame['V']
     DataFrame['W_initial'] = DataFrame['W']
+
 #printing average value 
     DataFrame.at[0, "U Avg"] = DataFrame["U"].mean()
     DataFrame.at[0, "V Avg"] = DataFrame["V"].mean()
@@ -95,6 +97,6 @@ def octant_identification(mod=5000):
      # getting outfile
     DataFrame.to_csv("octant_output.csv", index=False)
 
-
+#here we can choose mod values
 mod = 5000
 octant_identification(mod)
