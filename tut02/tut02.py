@@ -273,13 +273,35 @@ def make_zero(r):
 for xt in range(freq+2):       
     make_zero(xt)
 
-for x in range(z-1):
-    fr = Dataframe.at[x,'Octant']
-    to = Dataframe.at[x+1,'Octant']
-    if fr == 1 and to == 1:
-        Dataframe.iloc[freq + 9 , 14] += 1
-        
-#     Dataframe.at[freq + 8 + x ]
+def count_nos(r,start=0,end = z-1):  
+    oct_lst=[1,-1,2,-2,3,-3,4,-4]
+
+    for x in range(start,end):
+        fr = Dataframe.at[x,'Octant']
+        to = Dataframe.at[x+1,'Octant']
+        for y in range(len(oct_lst)):
+            if fr == oct_lst[y] and to == 1:
+                Dataframe.iloc[freq + 9+13*r + y , 12+1] += 1
+            elif fr == oct_lst[y] and to == -1:
+                Dataframe.iloc[freq + 9+13*r+ y  , 12+2] += 1
+            elif fr == oct_lst[y] and to == 2:
+                Dataframe.iloc[freq + 9+13*r+ y  , 12+3] += 1
+            elif fr == oct_lst[y]  and to == -2:
+                Dataframe.iloc[freq + 9+13*r+ y  , 12+4] += 1
+            elif fr == oct_lst[y] and to == 3:
+                Dataframe.iloc[freq + 9+13*r+ y  , 12+5] += 1
+            elif fr == oct_lst[y] and to == -3:
+                Dataframe.iloc[freq + 9+13*r+ y  , 12+6] += 1
+            elif fr == oct_lst[y] and to == 4:
+                Dataframe.iloc[freq + 9+13*r+ y  , 12+7] += 1
+            elif fr == oct_lst[y] and to == -4:
+                Dataframe.iloc[freq + 9+13*r+ y  , 12+8] += 1
+count_nos(0)
+for xy in range(1,freq+1):       
+    count_nos(xy,mod*(xy-1),mod*(xy-1) +mod)
+    
+count_nos(freq+1,mod*freq,z-1)
+
 Dataframe = Dataframe.fillna(' ')
 Dataframe.head(60)
 Dataframe.to_excel("output_octant_transition_identify.xlsx", index=False)
