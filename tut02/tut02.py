@@ -1,6 +1,7 @@
 # importing libraries
 import pandas as pd
 import numpy as np
+import math
 mod = 5000
 # reading input file
 Dataframe = pd.read_excel('input_octant_transition_identify.xlsx')
@@ -181,7 +182,7 @@ Dataframe.at[freq + 16,'octant ID'] = '-4'
 Dataframe.at[freq + 8,'1'] = '+1'
 Dataframe.at[freq + 8,'-1'] = '-1'
 Dataframe.at[freq + 8,'2'] = '+2'
-Dataframe.at[freq + 8,'-2'] = '+-2'
+Dataframe.at[freq + 8,'-2'] = '-2'
 Dataframe.at[freq + 8,'3'] = '+3'
 Dataframe.at[freq + 8,'-3'] = '-3'
 Dataframe.at[freq + 8,'4'] = '+4'
@@ -208,7 +209,7 @@ for r in range(newfreq):
         Dataframe.at[freq + 21,'1'] = '+1'
         Dataframe.at[freq + 21,'-1'] = '-1'
         Dataframe.at[freq + 21,'2'] = '+2'
-        Dataframe.at[freq + 21,'-2'] = '+-2'
+        Dataframe.at[freq + 21,'-2'] = '-2'
         Dataframe.at[freq + 21,'3'] = '+3'
         Dataframe.at[freq + 21,'-3'] = '-3'
         Dataframe.at[freq + 21,'4'] = '+4'
@@ -231,7 +232,7 @@ for r in range(newfreq):
         Dataframe.at[freq + 21 + 13*r,'1'] = '+1'
         Dataframe.at[freq + 21 + 13*r,'-1'] = '-1'
         Dataframe.at[freq + 21 + 13*r,'2'] = '+2'
-        Dataframe.at[freq + 21 + 13*r,'-2'] = '+-2'
+        Dataframe.at[freq + 21 + 13*r,'-2'] = '-2'
         Dataframe.at[freq + 21 + 13*r,'3'] = '+3'
         Dataframe.at[freq + 21 + 13*r,'-3'] = '-3'
         Dataframe.at[freq + 21 + 13*r,'4'] = '+4'
@@ -253,46 +254,32 @@ Dataframe.at[freq + 29 + 13*newfreq,'octant ID'] = '-4'
 Dataframe.at[freq + 21 + 13*newfreq,'1'] = '+1'
 Dataframe.at[freq + 21 + 13*newfreq,'-1'] = '-1'
 Dataframe.at[freq + 21 + 13*newfreq,'2'] = '+2'
-Dataframe.at[freq + 21 + 13*newfreq,'-2'] = '+-2'
+Dataframe.at[freq + 21 + 13*newfreq,'-2'] = '-2'
 Dataframe.at[freq + 21 + 13*newfreq,'3'] = '+3'
 Dataframe.at[freq + 21 + 13*newfreq,'-3'] = '-3'
 Dataframe.at[freq + 21 + 13*newfreq,'4'] = '+4'
 Dataframe.at[freq + 21 + 13*newfreq,'-4'] = '-4'
 
-# list = []
-# for h in range(64):
-#     list.append(0)
-# for p in range(z):
-#     if Dataframe.at[p,'Octant'] == 1 and Dataframe.at[p,'Octant'] == 1:
-#         list[0] = list[0] + 1
-#     elif Dataframe.at[p,'Octant'] == 1 and Dataframe.at[p,'Octant'] == -1:
-#         list[1] = list[1] + 1
-#     elif Dataframe.at[p,'Octant'] == 1 and Dataframe.at[p,'Octant'] == 2:
-#         list[2] = list[2] + 1
-#     elif Dataframe.at[p,'Octant'] == 1 and Dataframe.at[p,'Octant'] == -2:
-#         list[3] = list[3] + 1
-#     elif Dataframe.at[p,'Octant'] == 1 and Dataframe.at[p,'Octant'] == 3:
-#         list[4] = list[4] + 1
-#     elif Dataframe.at[p,'Octant'] == 1 and Dataframe.at[p,'Octant'] == -3:
-#         list[5] = list[5] + 1
-#     elif Dataframe.at[p,'Octant'] == 1 and Dataframe.at[p,'Octant'] == 4:
-#         list[6] = list[6] + 1
-#     elif Dataframe.at[p,'Octant'] == 1 and Dataframe.at[p,'Octant'] == -4:
-#         list[7] = list[7] + 1
-# #     for x in range(1,5):
-# #         for y in range(1,5):
-# #             if Dataframe.at[p,'Octant'] == x and Dataframe.at[p+1,'Octant'] == y:
-# #                 for w in range(17):
-# #                     list[w] = list[w]+1
-    
-# print(list[0])
-    
-#     if Dataframe.at[p,'Octant'] & Dataframe.at[p+1,'Octant'] == 1:
-#         count_11 = count_11+1
-#     elif 
-# removing NaN values
+def make_zero(r):
+    for n in range(8):
+        Dataframe.at[freq + 9 +13*r+n , '1'] = 0
+        Dataframe.at[freq + 9 +13*r+n , '-1'] = 0
+        Dataframe.at[freq + 9 +13*r+n , '2'] = 0
+        Dataframe.at[freq + 9 +13*r+n , '-2'] = 0
+        Dataframe.at[freq + 9 +13*r+n , '3'] = 0
+        Dataframe.at[freq + 9 +13*r+n , '-3'] = 0
+        Dataframe.at[freq + 9 +13*r+n , '4'] = 0
+        Dataframe.at[freq + 9 +13*r+n , '-4'] = 0
+for xt in range(freq+2):       
+    make_zero(xt)
+
+for x in range(z-1):
+    fr = Dataframe.at[x,'Octant']
+    to = Dataframe.at[x+1,'Octant']
+    if fr == 1 and to == 1:
+        Dataframe.iloc[freq + 9 , 14] += 1
+        
+#     Dataframe.at[freq + 8 + x ]
 Dataframe = Dataframe.fillna(' ')
-# just printing first 20 data rows
 Dataframe.head(60)
-# Finally convertring Dataframe to desired output excel file also removing first indexes
 Dataframe.to_excel("output_octant_transition_identify.xlsx", index=False)
