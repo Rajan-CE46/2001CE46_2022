@@ -1,4 +1,4 @@
-def octant_identification(mod):
+def octant_identification(mod = 5000):
     # importing libraries
     import pandas as pd
     import numpy as np
