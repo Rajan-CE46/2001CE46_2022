@@ -77,7 +77,7 @@ def octant_transition_count(mod=5000):
     Dataframe.at[0, '-4'] = oct_n4
     # piniting mod ranges according to mod value
     min_value = 0
-    # getting number of row that will have exact interval as nod value
+    # getting number of row that will have exact interval as mod value
     freq = z//mod  
     for i in range(freq):
         if i == 0:
@@ -187,7 +187,7 @@ def octant_transition_count(mod=5000):
     Dataframe.at[freq + 8,'-3'] = '-3'
     Dataframe.at[freq + 8,'4'] = '+4'
     Dataframe.at[freq + 8,'-4'] = '-4'
-
+# putting strings in the desired shell of excel sheet according to output file 
     newfreq = z//mod
     for r in range(newfreq):
         if r == 0:
@@ -259,10 +259,13 @@ def octant_transition_count(mod=5000):
     Dataframe.at[freq + 21 + 13*newfreq,'-3'] = '-3'
     Dataframe.at[freq + 21 + 13*newfreq,'4'] = '+4'
     Dataframe.at[freq + 21 + 13*newfreq,'-4'] = '-4'
-
+# Defining a funtion that will make initial values o in the transition count 
+# here r in matrix number i.e for r = 0 it will go to first matrix in which overall counts has to be placed
+# 13 is the diff between rows of two consecutive matrix so by multipliplying with r we can go to desired rows number
+# column no is same for all the matrix
     def make_zero(r):
         for n in range(8):
-            Dataframe.at[freq + 9 +13*r+n , '1'] = 0
+            Dataframe.at[freq + 9 +13*r+n , '1'] = 0 
             Dataframe.at[freq + 9 +13*r+n , '-1'] = 0
             Dataframe.at[freq + 9 +13*r+n , '2'] = 0
             Dataframe.at[freq + 9 +13*r+n , '-2'] = 0
@@ -270,10 +273,13 @@ def octant_transition_count(mod=5000):
             Dataframe.at[freq + 9 +13*r+n , '-3'] = 0
             Dataframe.at[freq + 9 +13*r+n , '4'] = 0
             Dataframe.at[freq + 9 +13*r+n , '-4'] = 0
+    # calling the function for all matrix except last matrix
     for xt in range(freq+2):       
         make_zero(xt)
-
+# for last matrix transtition count end will be z-1 
+# Defining a function count_nos that will take r, start , end and count the transition and place it to desired cell
     def count_nos(r,start=0,end = z-1):  
+        # creating a list that is containig octant values
         oct_lst=[1,-1,2,-2,3,-3,4,-4]
 
         for x in range(start,end):
@@ -296,16 +302,23 @@ def octant_transition_count(mod=5000):
                     Dataframe.iloc[freq + 9+13*r+ y  , 12+7] += 1
                 elif fr == oct_lst[y] and to == -4:
                     Dataframe.iloc[freq + 9+13*r+ y  , 12+8] += 1
+    # giving r = 0 and default values of start and end will be 0 automatically 
+    # This will count overall transition and place to the desired cell 
     count_nos(0)
+    # calling function for mod transtion range except last range
     for xy in range(1,freq+1):       
         count_nos(xy,mod*(xy-1),mod*(xy-1) +mod)
-        
-    count_nos(freq+1,mod*freq,z-1)
 
+    # calling function for last range 
+    count_nos(freq+1,mod*freq,z-1)
+# filling NaN value as ' '
     Dataframe = Dataframe.fillna(' ')
+# just for chrecking printing first 60 values of Dataframe
     Dataframe.head(60)
+# Finally converting the Dataframe to desired output file
     Dataframe.to_excel("output_octant_transition_identify.xlsx", index=False)
 
+# Checking for Python version version info
 from platform import python_version
 ver = python_version()
 
@@ -315,4 +328,5 @@ else:
     print("Please install 3.8.10. Instruction are present in the GitHub Repo/Webmail. Url: https://pastebin.com/nvibxmjw")
 
 mod=5000
+# Calling the octant_transition_count fiunction Here we can give mod values
 octant_transition_count(mod)
