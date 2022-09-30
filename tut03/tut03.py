@@ -72,7 +72,7 @@ def octant_longest_subsequence_count():
                 # Just after we get diff octant value nos of occ is stored in list using appeng
                 list.append(a+1)
                 # then again a =  0 for next cycle
-                # a=0
+                a=0
                 # this list will store number of continuos occurance of octant value w.r.t each octant value
     #     print(list)
     # now finding largest occurance of each octant and appending these values in list 2
