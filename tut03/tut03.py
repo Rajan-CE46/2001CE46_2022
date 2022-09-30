@@ -73,7 +73,7 @@ for n in list1:
         if counts > largest_count:
             largest_count = counts
     list2.append(largest_count)
-    list3.append(list2.count(largest_count))
+    list3.append(list.count(largest_count))
 for n in range(8):    
     Dataframe.at[n+1,'     '] = list2[n]
     Dataframe.at[n+1,'      '] = list3[n]
