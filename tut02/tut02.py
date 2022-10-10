@@ -22,12 +22,8 @@ def octant_transition_count(mod=5000):
         except Exception as e:
             print(e)
             
-        else:            
-            # finding mean and printing them in the avg column
-            Dataframe.at[0, 'U Avg'] = Dataframe['U'].mean()
-            Dataframe.at[0, 'V Avg'] = Dataframe['V'].mean()
-            Dataframe.at[0, 'W Avg'] = Dataframe['W'].mean()
-            z = len(Dataframe)
+        else: 
+            z = len(Dataframe)           
             # creating a function that will print U-U avg
             def oct(a, b, c, d):
                 for i in range(d):
