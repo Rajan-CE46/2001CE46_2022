@@ -74,7 +74,7 @@ def octant_longest_subsequence_count_with_range():
             list3 = []
             
             time_end = []
-
+            # Creatind a function that will take a item and a list and give all occurances of that item no matter if it is repeating 
             def find_indices(list_to_check, item_to_find):
                 return [idx for idx, value in enumerate(list_to_check) if value == item_to_find]
 
@@ -88,9 +88,9 @@ def octant_longest_subsequence_count_with_range():
                         a = a+1
                         # this a will be keep on adding till the same octant value is getting
                     elif Dataframe.at[i,'Octant'] == n and Dataframe.at[i+1,'Octant'] != n:
-                        # Just after we get diff octant value nos of occ is stored in list using appeng
+                        # Just after we get diff octant value nos of occ is stored in list using append
                         list.append(a+1)
-                        time.append(i)
+                        time.append(i)#this will keep on adding end time i values 
                         # then again a =  0 for next cycle
                         a=0
                     # this list will store number of continuos occurance of octant value w.r.t each octant value
@@ -105,7 +105,7 @@ def octant_longest_subsequence_count_with_range():
                 list3.append(list.count(largest_count))
                 occ_list = find_indices(list, largest_count)
                 for k in occ_list:
-                    time_end.append(time[k])
+                    time_end.append(time[k])# this will keep on adding the end time of largest occurance 
                 
             #     time_end.append(time[ix])
             
@@ -116,11 +116,11 @@ def octant_longest_subsequence_count_with_range():
             #     time_start[i] = time_end[i]-(list2[i]-1)
                 
             # print(time_start,end = " ")
-            print(time_end,end = " ")
+            # print(time_end,end = " ")
             for n in range(8):    
                 Dataframe.at[n+1,'     '] = list2[n]
                 Dataframe.at[n+1,'      '] = list3[n]
-
+            #putting values in excel sheet as per output file 
             Dataframe.at[0,'        '] = ' '
             Dataframe.at[0,'           '] = 'Octant'
             Dataframe.at[0,'              '] = 'Longest Subsquence Length'
@@ -137,6 +137,7 @@ def octant_longest_subsequence_count_with_range():
             Dataframe.at[4,'           '] = '-1'
             Dataframe.at[5,'           '] = 'Time'
             Dataframe.at[5,'              '] = 'From'
+            #printing time values 
             Dataframe.at[6,'              '] = Dataframe.at[time_end[1]-(list2[1]-1),'Time']
             Dataframe.at[7,'              '] = Dataframe.at[time_end[2]-(list2[1]-1),'Time']
             Dataframe.at[8,'              '] = Dataframe.at[time_end[3]-(list2[1]-1),'Time']
@@ -162,7 +163,7 @@ def octant_longest_subsequence_count_with_range():
             for n in range(8,25,3):    
                 Dataframe.at[n+1,'              '] = list2[n//3]
                 Dataframe.at[n+1,'                  '] = list3[n//3]
-
+            #just replcing 1 to +1 and same for others
 
             for i in range(z):
                 if(Dataframe.at[i, "U'=U-U Avg"] >= 0 and Dataframe.at[i, "V'=V-V Avg"] >= 0 and Dataframe.at[i, "W'=W-W Avg"] >= 0):
