@@ -15,6 +15,18 @@ def oct(a, b, c, d):
     for i in range(d):
         Dataframe.at[i, c] = Dataframe.at[i, a] - Dataframe.at[0, b]
         
+        
+octant_name_id_mapping = {
+    "1":"Internal outward interaction",
+    "-1":"External outward interaction",
+    "2":"External Ejection",
+    "-2":"Internal Ejection", 
+    "3":"External inward interaction",
+    "-3":"Internal inward interaction", 
+    "4":"Internal sweep",
+    "-4":"External sweep"
+}
+        
 
         
 # calling oct function that will print U-Uavg and same for V and W
@@ -52,11 +64,13 @@ def rankCounter(k,list_rank):
     list_rank_1= list_rank[:]
     for i in range(8):
         a= list_Base[list_rank_1.index(max(list_rank))]
+        print(a)
         Dataframe.at[k,f" {a}"] = Rank_list[0]
+        
         list_rank.remove(max(list_rank))
-#         print(list_overall)
         Rank_list.pop(0)
-#         print(Rank_list)
+    Dataframe.at[k,"Rank1 Octant ID"] = list_Base[list_rank_1.index(max(list_rank_1))]
+    Dataframe.at[k,"Rank1 Octant Name"] = octant_name_id_mapping[f"{list_Base[list_rank_1.index(max(list_rank_1))]}"]
 
 oct_1 = 0
 oct_n1 = 0
@@ -198,20 +212,9 @@ Dataframe.at[0,' 3'] = "Rank 5"
 Dataframe.at[0,' -3'] = "Rank 6"
 Dataframe.at[0,' 4'] = "Rank 7"
 Dataframe.at[0,' -4'] = "Rank 8"
+Dataframe.at[0,"Rank1 Octant ID"] = 0
+Dataframe.at[0,"Rank1 Octant Name"] =0 
 
-# def rankCounter(k,list_rank):
-#     list_Base = [1,-1,2,-2,3,-3,4,-4]
-#     Rank_list = [1,2,3,4,5,6,7,8]
-#     list_rank_1= list_rank[:]
-
-#     for i in range(8):
-#         a= list_Base[list_rank_1.index(max(list_rank))]
-#         Dataframe.at[k,f" {a}"] = Rank_list[0]
-#     #list_overall.pop(list_overall.index(max(list_overall)))
-#         list_overall.remove(max(list_overall))
-#         print(list_overall)
-#         Rank_list.pop(0)
-#         print(Rank_list)
 
 print(list_overall)
 
@@ -226,8 +229,8 @@ rankCounter(6,list_mod[4])
 rankCounter(7,list_mod[5])
 
 
-Dataframe.at[0,"Rank1 Octant ID"] = 0
-Dataframe.at[0,"Rank1 Octant Name"] =0 
+
+
 
 
 Dataframe = Dataframe.fillna(' ')
@@ -236,34 +239,3 @@ Dataframe.head(20)
 Dataframe.to_excel("octant_output_ranking_excel.xlsx",index = False)
 
 # Dataframe.iloc[0,1]
-
-
-
-# from datetime import datetime
-# start_time = datetime.now()
-
-# #Help https://youtu.be/N6PBd4XdnEw
-# def octant_range_names(mod=5000):
-
-    
-#     octant_name_id_mapping = {"1":"Internal outward interaction", "-1":"External outward interaction", "2":"External Ejection", "-2":"Internal Ejection", "3":"External inward interaction", "-3":"Internal inward interaction", "4":"Internal sweep", "-4":"External sweep"}
-
-# ###Code
-
-# from platform import python_version
-# ver = python_version()
-
-# if ver == "3.8.10":
-#     print("Correct Version Installed")
-# else:
-#     print("Please install 3.8.10. Instruction are present in the GitHub Repo/Webmail. Url: https://pastebin.com/nvibxmjw")
-
-
-# mod=5000 
-# octant_range_names(mod)
-
-
-
-# #This shall be the last lines of the code.
-# end_time = datetime.now()
-# print('Duration of Program Execution: {}'.format(end_time - start_time))
