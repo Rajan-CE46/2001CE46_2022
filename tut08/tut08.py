@@ -47,7 +47,7 @@ def scorecard():
 	df2["strike rate"] = [0 for players in pak_plying_11]
 	t = ind_inn.split("\n")
 	u = pak_inn.split("\n")
-	rajan = ['Rohit','Rahul','Kohli','Suryakumar Yadav','Karthik','Hardik Pandya','Jadeja']
+	rajan = ['Rohit','Rahul','Kohli','Suryakumar Yadav','Karthik','Hardik Pandya','Jadeja',"Bhuvneshwar","Avesh Khan","Chahal","Arshdeep Singh"]
 	harsa = ['Babar Azam','Rizwan','Fakhar Zaman','Iftikhar Ahmed','Khushdil','Asif Ali','Shadab Khan', 'Mohammad Nawaz', 'Naseem Shah','Haris Rauf','Dahani']
 	ind_df = pd.DataFrame(df1)
 	pak_df = pd.DataFrame(df2)
@@ -63,9 +63,10 @@ def scorecard():
 		six_runs = 0
 		for elem in t:
 			remark = re.search(f'{players},\s\w*\s*\w*(,)?((1|2|3|FOUR|SIX)|no\srun|out)',elem)
-			rem_out = re.search(f'{players}\s\w+\s\w+\s\w+\s\d+(\d+)',elem)
+			rem_out = re.search(f'{players}\s\w\s\w+\s\w+?\s?\w+?\s?\w+?\s?\w+\s\w+\(\w+\)',elem)
 			if rem_out:
 				print(rem_out)
+				ind_df.at[iter,"Details"]= rem_out.group(0)
 			if remark:
 				# print(remark)
 				rem = (remark[0])
@@ -103,6 +104,10 @@ def scorecard():
 		ind_df.at[iter,"Balls"]= Balls
 		ind_df.at[iter,"fours"]= four_runs
 		ind_df.at[iter,"Sixes"]= six_runs
+		if ind_df.at[iter,"Details"] == 0:
+			ind_df.at[iter,"Details"] = "NOT OUT/ DNB"
+
+		
 		if Balls!=0:
 			ind_df.at[iter,"strike rate"]= sum(int_run)/Balls*100
 		else:
@@ -120,6 +125,10 @@ def scorecard():
 		six_runs = 0
 		for elem in u:
 			remark = re.search(f'{players},\s\w*\s*\w*(,)?((1|2|3|FOUR|SIX)|no\srun|out)',elem)
+			rem_out = re.search(f'{players}\s\w\s\w+\s\w+?\s?\w+?\s?\w+?\s?\w+\s\w+\(\w+\)',elem)
+			if rem_out:
+				print(rem_out)
+				pak_df.at[iter,"Details"]= rem_out.group(0)
 			if remark:
 				# print(remark)
 				rem = (remark[0])
@@ -157,6 +166,8 @@ def scorecard():
 		pak_df.at[iter,"Balls"]= Balls
 		pak_df.at[iter,"fours"]= four_runs
 		pak_df.at[iter,"Sixes"]= six_runs
+		if pak_df.at[iter,"Details"] == 0:
+			pak_df.at[iter,"Details"] = "NOT OUT/ DNB"
 		if Balls!=0:
 			pak_df.at[iter,"strike rate"]= sum(int_run)/Balls*100
 		else:

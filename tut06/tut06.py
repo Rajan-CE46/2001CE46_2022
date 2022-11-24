@@ -2,77 +2,134 @@ from datetime import datetime
 start_time = datetime.now()
 
 def attendance_report():
-    import pandas as pd
-    import numpy as np
+    from collections import OrderedDict
+    from ast import Str
+    from cmath import nan
+    from itertools import count
+    from lib2to3.pytree import type_repr
     import os
-    import glob
-    import re
-    import datetime
-    # reading input file
-    Dataframe = pd.read_csv('input_attendance.csv')
-    Dataframe1 = pd.read_csv("input_registered_students.csv")
+    from csv import writer
+    from csv import reader
+    from traceback import print_tb
+    import numpy as np
+    import pandas as pd
+    from datetime import datetime
+    import calendar
 
-    df_cons = pd.read_csv(r"output\attendance_report_consolidated.csv")
-    rollcount = Dataframe['Attendance'].tolist()
-    rollcount1 = [str(x) for x in rollcount]
-    rollcount2 = [y.upper() for y in rollcount1]
+    df1 = pd.read_csv('input_registered_students.csv')  
+    df2 = pd.read_csv('input_attendance.csv')  
+    df2=df2.fillna('2001ce46 rajan')
+    days=['2022-07-28','2022-08-01','2022-08-04','2022-08-08','2022-08-12','2022-08-15','2022-08-18','2022-08-22','2022-08-25','2022-08-29','2022-09-01','2022-09-05','2022-09-08','2022-09-12','2022-09-15','2022-09-19','2022-09-22','2022-09-26','2022-09-29']
 
-    # for z in range(len(Dataframe)):
-    dates = Dataframe['Timestamp'].tolist()
-    list_times = []
-    for z in range(len(dates)):
-        l5= re.findall(r"[\w']+",dates[z])
-        list_times.append(l5)
+    df5=pd.DataFrame(columns=['Roll','Name']+days)
+    df5.at[0,'Actual Lecture Taken']='Total Mon+Thurs dynamic count'
+    df5.at[0,'Total Real']=''
+    df5.at[0,"%Attendance"]=''
+    print(df5)
+    
+    for i in range(0,220):
+
+        # break
+        roll_no=df1.at[i,'Roll No']
+        name=df1.at[i,'Name']
         
-    # print(list_times)
-
-    lect = 1
-    for p in range(1,len(list_times)):  
-        if(int(list_times[p-1][0]) != int(list_times[p][0]) or int(list_times[p-1][1]) != int(list_times[p][1]) ):
-            if(datetime.datetime(int(list_times[p][2]),int(list_times[p][1]),int(list_times[p][0])).weekday() == 0 or datetime.datetime(int(list_times[p][2]),int(list_times[p][1]),int(list_times[p][0])).weekday()== 3):
-                lect+=1
-    lect = lect -1
-    print(lect)
-
-
-    path ='output'
-    all_files = glob.glob(path + "/*.csv")
-    a = 0    
-    for i in range(222):
-        if a == 221:
-            break
-        else:
-            df2 = pd.read_csv(f"""{all_files[i]}""")
-            df2.at[0,'Roll'] = f"""{Dataframe1.at[i,'Roll No']}"""
-            df2.at[0,'Name'] = f"""{Dataframe1.at[i,'Name']}"""
-            df2.at[0,'total_lecture_taken'] = lect
-            df_cons.at[i,'total_lecture_taken'] = lect
-            df_cons.at[i,'Roll'] = f"""{Dataframe1.at[i,'Roll No']}"""
-            df_cons.at[i,'Name'] = f"""{Dataframe1.at[i,'Name']}"""
-            l2 = 0
-            for k in range(len(Dataframe)):
-                l1= re.findall(r"[\w']+",Dataframe.at[k,"Timestamp"])
-    #             print(l1)
-                if(f"{Dataframe.at[k,'Attendance']}".upper() == f"{Dataframe1.at[i,'Roll No']} {Dataframe1.at[i,'Name']}"):
-                    if(datetime.datetime(int(l1[2]),int(l1[1]),int(l1[0])).weekday() == 0 or datetime.datetime(int(l1[2]),int(l1[1]),int(l1[0])).weekday() == 3):
-                        if(int(l1[3])==14 or (int(l1[3])==15 and int(l1[4]) == 0 and int(l1[5])==0)):
-                            l2+=1
-                
-    #         print(l2) 
-            df2.at[0,'attendance_count_actual'] = int(l2)
-            df2.at[0,'attendance_count_fake'] = int(rollcount2.count(f"{Dataframe1.at[i,'Roll No']} {Dataframe1.at[i,'Name']}"))-int(l2)
-            df2.at[0,'attendance_count_absent'] = int(lect) - int(df2.at[0,'attendance_count_actual'])
+        combine=roll_no +' '+name
+        
+        
+        report_date=[]
+    
+        df3=pd.DataFrame(columns=['dates'])
+        k=0
+        total_cnt=len(df2['Timestamp'])
+        
+        for j in range(0,total_cnt):
+            if(df2.at[j,'Attendance'].split()[0]==roll_no):
+                df3.at[k,'dates']=(df2.at[j,'Timestamp'])
+                k=k+1
+        
+        
+        total_submited=len(df3['dates'])
+        
+        df3['dates'] = pd.to_datetime(df3['dates'],dayfirst=True)
+        
+        
+        valid_days=[]
+    
+        
+        start='14:00:00'
+        end='15:00:00'
+        for h in range(0,total_submited):
             
-            df_cons.at[i,'attendance_count_actual'] = int(l2)
-            df_cons.at[i,'attendance_count_absent'] = int(lect) - int(df2.at[0,'attendance_count_actual'])
-            df_cons.at[i,'attendance_count_fake'] = int(rollcount2.count(f"{Dataframe1.at[i,'Roll No']} {Dataframe1.at[i,'Name']}"))-int(l2)
-    #         if(int(df2.at[0,'total_lecture_taken'])!=0):
-            df_cons.at[i,'Percentage (attendance_count_actual/total_lecture_taken) 2 digit decimal '] = round(int(df2.at[0,'attendance_count_actual'])*100/int(lect),2)
-            df2.at[0,'Percentage (attendance_count_actual/total_lecture_taken) 2 digit decimal '] = round(int(df2.at[0,'attendance_count_actual'])*100/int(lect),2)
-            a = a+1
-        df2.to_csv(f"""{all_files[i]}""",index = False)
-    df_cons.to_csv(f"""{all_files[221]}""",index = False)
-    df_cons.head(20)
+            if(((df3.at[h,'dates'].strftime('%A')=='Monday' )|(df3.at[h,'dates'].strftime('%A')=='Thursday'))  ):
+                valid_days.append(df3.at[h,'dates'])
+
+        
+        
+        Total_Attendance_Count=len(valid_days)
+        
+        
+        path="output/{}".format(roll_no)+'.xlsx'
+        df4=pd.read_excel(path)
+        
+        
+        df5.at[i+1,'Name']=name
+        df5.at[i+1,'Roll']=roll_no
+        
+        
+        real_cnt=0
+        
+        df4.at[0,'Roll']=roll_no
+        df4.at[0,'Name']=name
+        
+        
+        for k in range(0,len(days)):
+            s=days[k]
+            attend_day=[]
+            for h in range(0,len(valid_days)):
+                current_date = valid_days[h].strftime("%Y-%m-%d")
+                if(current_date==s):
+                    
+                    attend_day.append(valid_days[h])
+            # print(attend_day)
+            cnt=0
+            for l in range(0,len(attend_day)):
+                current_time = attend_day[l].strftime("%H:%M")
+                if(((current_time >= start) & (current_time <= end) ) ):
+                    cnt+=1 
+                
+            real=0
+            Absent=1
+            dublicate=0
+            if(cnt>0):
+                real=1      
+            if(real>0):
+                Absent=0
+            if(cnt>1):
+                dublicate=cnt-1
+            real_cnt+=real
+            df4.at[k+1,'Date']=s
+            df4.at[k+1,'Total Attendance Count']=cnt
+            df4.at[k+1,'Real']=real
+            df4.at[k+1,'Duplicate']=dublicate
+            df4.at[k+1,'Invalid']=len(attend_day)-cnt
+            df4.at[k+1,'Absent']=Absent
+            
+            
+            df5.at[i+1,s]='P'
+            if(cnt==0):
+                df5.at[i+1,s]='A'
+            
+            
+        df5.at[i+1,'Total Real']=real_cnt
+        df5.at[i+1,'%Attendance']=round(real_cnt/12*100,2)
+        
+    
+        df4.to_excel(path, index=False)
+        
+        
+        
+    hehe = 'attendance_report_consolidated'  
+    df5.to_excel(f'output/{hehe}.xlsx',index=False)
 
 from platform import python_version
 ver = python_version()
@@ -84,8 +141,6 @@ else:
 
 
 attendance_report()
-
-
 
 
 #This shall be the last lines of the code.
