@@ -4,19 +4,23 @@ import io
 import os
 import pandas as pd
 from io import BytesIO
-import streamlit as st
-# mod=5000
 from asyncio.windows_events import NULL
 from itertools import count
 from logging import NullHandler
 from queue import Empty
 from tkinter import W
-import pandas as pd
 import math
 import datetime
 from pathlib import Path
 import glob
+from openpyxl.styles import Border,Side
+import openpyxl
+from openpyxl import Workbook
+import xlsxwriter
+from openpyxl.styles import PatternFill
+
 pd.options.mode.chained_assignment = None  # default='warn'
+
 
 
 
@@ -37,7 +41,7 @@ def octant_analysis(mod=5000):
     # mod = 5000
     try:
         if data_file is not None:
-            Dataframe = pd.read_excel(data_file)
+            Dataframe = pd.read_excel(data_file,nrows=300)
             # st.write("INPUT FILE Content :")
             st.dataframe(Dataframe)
         # Dataframe = pd.read_excel('inpt.xlsx')
@@ -637,8 +641,8 @@ def octant_analysis(mod=5000):
                 elemh+=1
                 elemt+=1
             Dataframe = Dataframe.fillna(' ')
-
-            Dataframe.head(20)
+            # Dataframe=Dataframe.style.highlight_max()
+            # Dataframe.head(20)
             
 
 
@@ -649,7 +653,55 @@ def octant_analysis(mod=5000):
                 workbook = writer.book
                 worksheet = writer.sheets['Sheet1']
                 format1 = workbook.add_format({'num_format': '0.00'}) 
-                worksheet.set_column('A:A', None, format1)  
+                worksheet.set_column('A:A', None, format1)
+                # full_border = workbook.add_format(
+                #     {
+                #         "border" : 1,
+                #         "border_color": "#000000"
+                #     }
+                # )
+                # for rows in ws.iter_rows(min_row=0, max_row=110, min_col=14,max_col=80):
+                #     for cell in rows:
+                #         if cell.value!=' ':
+                #             full_border
+
+
+                
+                
+                worksheet.set_column(
+                    7,
+                    9,
+                    17
+                )  
+                worksheet.set_column(
+                    "O:O",
+                    30
+                )  
+                worksheet.set_column(
+                    "AS:AS",
+                    28
+                )  
+                worksheet.set_column(
+                    "AW:AW",
+                    28
+                )  
+                worksheet.set_column(
+                    "P:P",
+                    24
+                )
+                worksheet.set_column(
+                    "AD:AD",
+                    18
+                )
+                worksheet.set_column(
+                    "AE:AE",
+                    28
+                )
+                worksheet.set_column(
+                    "AH:AH",
+                    16
+                )
+                
                 writer.save()
                 processed_data = output.getvalue()
                 return processed_data
@@ -664,7 +716,12 @@ def octant_analysis(mod=5000):
                 # outputfile_Name = f'{data_file.name}_mod({mod}){datetime.datetime.now()}.xlsx'	
                 
             # elif opt == 2:
-            outputfile_Name = f'mod({mod}){datetime.datetime.now()}.xlsx'
+            # if opt == 1:
+                # filenmae= data_file.name
+                # filenaming = filenmae.split("xlsx")[0]
+            outputfile_Name = f'{file_name1}mod({mod}){datetime.datetime.now()}.xlsx'
+            # elif opt == 2:
+
 
             st.download_button(label='Download Result',data=df_data,file_name=outputfile_Name)	
         # st.download_button(label='Download excel',data=file,file_name='out1.xl
@@ -677,21 +734,25 @@ option = st.selectbox('Choose a option:',('1.Single file Conversion','2.Bulk con
 get_mod = st.number_input("Enter MOD Value:",step=1)
 mod = int(get_mod)
 # opt = 0
+# opt = 0
 if option=='1.Single file Conversion':
     att = 0
-    # opt == 1
+    # opt = 1
     st.write("Please upload your file down below :point_down:")
     data_file = st.file_uploader('INPUT FILE',type=['xlsx'])
+    
     with st.form("submitbuton"):
         submitted = st.form_submit_button("Submit")
         if submitted:
             att=1            
     if att == 1:
+        filenmae= data_file.name
+        file_name1 = filenmae.split("xlsx")[0]
         octant_analysis(mod) 
 
 elif option=='2.Bulk conversion':
     atn = 0
-    # opt == 2
+    # opt = 2
     path=st.text_input("Copy and paste folder path:")
     with st.form("submitbuton"):
         submitted = st.form_submit_button("Submit")
@@ -703,6 +764,9 @@ elif option=='2.Bulk conversion':
         # files_list = [os.path.splitext(file)[0].lower() for file in files]
         
         for file in files:
+            file_name2 = os.path.basename(file)
+            file_name1 = file_name2.split("xlsx")[0]
+
             data_file = f"{file}"
             octant_analysis(mod)
         
