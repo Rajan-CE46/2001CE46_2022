@@ -41,7 +41,7 @@ def octant_analysis(mod=5000):
     # mod = 5000
     try:
         if data_file is not None:
-            Dataframe = pd.read_excel(data_file,nrows=300)
+            Dataframe = pd.read_excel(data_file)
             # st.write("INPUT FILE Content :")
             st.dataframe(Dataframe)
         # Dataframe = pd.read_excel('inpt.xlsx')
