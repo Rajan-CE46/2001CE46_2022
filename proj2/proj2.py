@@ -56,6 +56,7 @@ def octant_analysis(mod=5000):
             print(e)
         else:
             z = len(Dataframe)
+            # z = 200
             # creating a function that will print U-U avg
 
             def oct(a, b, c, d):
@@ -665,7 +666,7 @@ def octant_analysis(mod=5000):
             # elif opt == 2:
             outputfile_Name = f'mod({mod}){datetime.datetime.now()}.xlsx'
 
-            st.download_button(label='Compute and Download Result',data=df_data,file_name=outputfile_Name)	
+            st.download_button(label='Download Result',data=df_data,file_name=outputfile_Name)	
         # st.download_button(label='Download excel',data=file,file_name='out1.xl
         # sx')
             # file_name=(uploaded_file.name)+''+ str(mod)+ ''+ (res)+'.xlsx'
@@ -676,22 +677,33 @@ option = st.selectbox('Choose a option:',('1.Single file Conversion','2.Bulk con
 get_mod = st.number_input("Enter MOD Value:",step=1)
 mod = int(get_mod)
 # opt = 0
-
-if option=='2.Bulk conversion':
-    # opt == 2
-    path=st.text_input("Copy and paste folder path:")
-    # path= f"{pathh}"
-    files = glob.glob(path + '/*xlsx')
-    # files_list = [os.path.splitext(file)[0].lower() for file in files]
-    
-    for file in files:
-        data_file = f"{file}"
-        octant_analysis(mod)
-        
-
-elif option=='1.Single file Conversion':
+if option=='1.Single file Conversion':
+    att = 0
     # opt == 1
     st.write("Please upload your file down below :point_down:")
     data_file = st.file_uploader('INPUT FILE',type=['xlsx'])
-    
-    octant_analysis(mod)
+    with st.form("submitbuton"):
+        submitted = st.form_submit_button("Submit")
+        if submitted:
+            att=1            
+    if att == 1:
+        octant_analysis(mod) 
+
+elif option=='2.Bulk conversion':
+    atn = 0
+    # opt == 2
+    path=st.text_input("Copy and paste folder path:")
+    with st.form("submitbuton"):
+        submitted = st.form_submit_button("Submit")
+        if submitted:
+            atn = 1
+    if atn == 1:
+
+        files = glob.glob(path + '/*xlsx')
+        # files_list = [os.path.splitext(file)[0].lower() for file in files]
+        
+        for file in files:
+            data_file = f"{file}"
+            octant_analysis(mod)
+        
+
